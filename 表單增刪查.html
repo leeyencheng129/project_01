@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
+  <title>安安你好我是歐</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+
+</head>
+
+<body>
+  <div class="panel panel-primary">
+    <div class="panel-heading">添加書籍</div>
+    <div class="panel-body form-inline">
+      <div class="input-group">
+        <div class="input-group-addon">書名</div>
+        <input type="text" class="form-control" id="iptBookname" placeholder="請輸入書名">
+      </div>
+      <div class="input-group">
+        <div class="input-group-addon">作者</div>
+        <input type="text" class="form-control" id="iptAuthor" placeholder="請輸入作者">
+      </div>
+      <div class="input-group">
+        <div class="input-group-addon">出版社</div>
+        <input type="text" class="form-control" id="iptPublisher" placeholder="請輸入出版社">
+      </div>
+
+      <button id="btnAdd" class="btn btn-primary">添加</button>
+    </div>
+  </div>
+
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <td>id</td>
+        <td>書名</td>
+        <td>作者</td>
+        <td>出版社</td>
+        <td>操作</td>
+      </tr>
+    </thead>
+    <tbody id="tb"></tbody>
+  </table>
+
+
+  <script src="js/jquery-2.2.4.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script>
+
+    $(function () {
+      function getBookList() {
+        $.get('http://www.liulongbin.top:3006/api/getbooks', function (res) {
+          if (res.status !== 200) return alert('獲取數據失敗')
+
+          var rows = [];
+          $.each(res.data, function (i, item) {
+            rows.push('<tr><td>' + item.id + '</td><td>' + item.bookname + '</td><td>' + item.author + '</td><td>' + item.publisher + '</td><td><a href="javascript:;" class="del" data-id="' + item.id + '">刪除</a></td></tr>')
+          })
+          $('#tb').empty().append(rows)
+        })
+      }
+      getBookList();
+
+
+      $('tbody').on('click', '.del', function () {
+        var id = $(this).attr('data-id')
+        $.get('http://www.liulongbin.top:3006/api/delbook', { id: id }, function (res) {
+          if (res.status !== 200) return alert('刪除失敗');
+          getBookList();
+        })
+      })
+
+      $('#btnAdd').on('click', function () {
+        var bookname = $('#iptBookname').val().trim();
+        var author = $('#iptAuthor').val().trim();
+        var publisher = $('#iptPublisher').val().trim();
+        if (bookname.length <= 0 || author.length <= 0 || publisher.length <= 0) {
+          return alert('請打完整')
+        }
+        $.post('http://www.liulongbin.top:3006/api/addbook', { bookname: bookname, author: author, publisher: publisher }, function (res) {
+          if (res.status !== 201) return alert('增添失敗')
+          getBookList();
+          $('#iptBookname').val('');
+          $('#iptAuthor').val('');
+          $('#iptPublisher').val('');
+        })
+      })
+
+    })
+
+
+
+
+
+
+  </script>
+</body>
+
+</html>

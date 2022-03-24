@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
+  <title>安安你好我是歐</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+  <button id="btn1">get</button>
+  <button id="btn2">post</button>
+
+  <script src="js/jquery-2.2.4.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+
+  <script>
+    document.querySelector('#btn1').addEventListener('click', function () {
+      var url = 'http://www.liulongbin.top:3006/api/get'
+      var paramsObj = { name: 'zs', age: 22 }
+      axios.get(url, { params: paramsObj }).then(function (res) {
+        console.log(res.data);
+      })
+    })
+
+    document.querySelector('#btn2').addEventListener('click', function () {
+      var url = 'http://www.liulongbin.top:3006/api/post'
+      var dataObj = { address: '你旖旎', location: '我我我' }
+      axios.post(url, dataObj).then(function (res) {
+        console.log(res.data);
+      })
+    })
+  </script>
+</body>
+
+</html>
